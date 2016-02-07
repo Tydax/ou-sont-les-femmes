@@ -14,6 +14,7 @@ module Utils (
 ) where
 
 import Types
+import Text.EditDistance
 
 {-|
   The 'distance' computes the Leveinshtein distance between two strings,

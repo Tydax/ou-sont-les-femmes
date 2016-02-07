@@ -15,8 +15,12 @@ cabal-version:       >=1.10
 
 library
   hs-source-dirs:      src
-  exposed-modules:     Lib
+  exposed-modules:     Types
+                     , Utils
+                     , CSVLoader
+                     , NameCluster
   build-depends:       base >= 4.7 && < 5
+                     , edit-distance
   default-language:    Haskell2010
 
 executable ou-sont-les-femmes-exe
