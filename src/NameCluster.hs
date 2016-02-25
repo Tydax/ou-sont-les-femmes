@@ -25,17 +25,18 @@ import Utils
   The 'addToCluster' function adds the specified name to one of the clusters or creates a new cluster
   if the distance is greater than all the others.
 -}
-addToCluster :: Name -> Distance -> [Cluster] -> [Cluster]
-addToCluster n _ [] = [Cluster [n] n]
-addToCluster n d (c:cs)
-  | distanceFromCluster n c <= d = let Cluster ns ct = c
-                                   in (Cluster ns $ evaluateCentre $ c):cs
-  | otherwise = c:(addToCluster n d cs)
+addToCluster :: Name -> [Cluster] -> [Cluster]
+addToCluster n [] = [Cluster [n] n]
+addToCluster n (c:cs)
+  | distanceFromCluster n c <= formulaDistance n ct = (Cluster ns $ evaluateCentre $ c):cs
+  | otherwise = c:(addToCluster n cs)
+  where
+    Cluster ns ct = c
 
 -- |The 'clusterify' function distributes the specified names in clusters, using the 'addToCluster' function.
-clusterify :: [Name] -> Distance -> [Cluster]
-clusterify [] dist = []
-clusterify (n:ns) dist = addToCluster n dist $ clusterify ns dist
+clusterify :: [Name] -> [Cluster]
+clusterify [] = []
+clusterify (n:ns) = addToCluster n $ clusterify ns
 
 -- |The 'distanceFromCluster' function computes the distance between a Name and a Cluster.
 distanceFromCluster :: Name -> Cluster -> Int
@@ -45,5 +46,9 @@ distanceFromCluster name (Cluster _ ct) = distance name ct
 evaluateCentre :: Cluster -> Centre
 evaluateCentre (Cluster ns ct) = ct
 
-formulaDistance :: Name -> Distance
-formulaDistance n = length n `div` 3 
+{-|
+  The 'formulaDistance' function describes the formula used to evaluate the max distance that a word must be from
+  the centre of a cluster to be considered as being part of the cluster.
+-}
+formulaDistance :: Name -> Name -> Distance
+formulaDistance n1 n2 = min (length n1) (length n2) `div` 2
