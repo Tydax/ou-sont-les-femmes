@@ -11,10 +11,20 @@
   are here just to make the code easier to understand and read.
 -}
 module Types (
+  Centre,
+  Cluster(Cluster),
   Distance,
   Name,
-  Cluster
 ) where
+
+-- |The 'Centre' represents the centre of a cluster.
+type Centre = Name
+
+{-|
+  The 'Cluster' type describes a group containing names which distance 
+  is short.
+-}
+data Cluster = Cluster [Name] Centre deriving (Show)
 
 {-|
   The 'Distance' type describes the Levenshtein distance between two strings,
@@ -25,9 +35,3 @@ type Distance = Int
 
 -- |The 'Name' type describes a name.
 type Name = String
-
-{-|
-  The 'Cluster' type describes a group containing names which distance 
-  is short.
--}
-type Cluster = [Name]
