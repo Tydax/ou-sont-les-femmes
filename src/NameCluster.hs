@@ -15,9 +15,11 @@ module NameCluster (
   checkCluster,
   checkClusters,
   clusterify,
+  clusterifyNames,
   distanceFromCluster,
   evaluateCentre,
-  formulaDistance
+  formulaDistance,
+  reclusterify
 ) where
 
 import Types
@@ -51,16 +53,17 @@ checkCluster c
 
 -- |The 'checkClusters' function checks that all clusters are still consistent calling the 'checkCluster' function.
 checkClusters :: [Cluster] -> [Name]
+checkClusters [] = []
 checkClusters (c:cs) = checkCluster c ++ checkClusters cs
 
-reclusterify :: [Name] -> [Cluster] -> [Cluster]
-reclusterify [] cs = cs
-reclusterify (n:ns) cs = reclusterify ns addToCluster $ n cs
-
--- |The 'clusterify' function distributes the specified names in clusters, using the 'addToCluster' function.
+-- |An alias for the 'reclusterify' function used as an entry point for the recursion.
 clusterify :: [Name] -> [Cluster]
-clusterify [] = []
-clusterify (n:ns) = addToCluster n $ clusterify ns
+clusterify = reclusterify []
+
+-- |The 'clusterifyNames' function distributes the specified names in the specified clusters, using the 'addToCluster' function.
+clusterifyNames :: [Name] -> [Cluster] -> [Cluster]
+clusterifyNames [] cs = cs
+clusterifyNames (n:ns) cs = addToCluster n $ clusterify ns cs
 
 -- |The 'distanceFromCluster' function computes the distance between a Name and a Cluster.
 distanceFromCluster :: Name -> Cluster -> Distance
@@ -76,3 +79,15 @@ evaluateCentre (Cluster ns ct) = ct
 -}
 formulaDistance :: Name -> Name -> Distance
 formulaDistance n1 n2 = min (length n1) (length n2) `div` 2
+
+{-|
+  'reclusterify' is a recursive function checking at each call that the clusters are consistent
+  using the 'checkClusters' function. If they are not consistent, 'reclusterify' calls itself again.
+-}
+reclusterify :: [Cluster] -> [Name] -> [Cluster]
+reclusterify cs [] = cs
+reclusterify cs ns =
+  let
+    newcs = clusterifyNames ns cs
+    excluded = checkClusters newcs
+  in reclusterify newcs excluded
