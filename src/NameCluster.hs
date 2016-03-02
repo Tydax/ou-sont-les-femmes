@@ -17,9 +17,9 @@ module NameCluster (
   clusterify,
   clusterifyNames,
   distanceFromCluster,
-  evaluateCentre,
   formulaDistance,
-  reclusterify
+  reclusterify,
+  reevaluateCentres
 ) where
 
 import Types
@@ -32,7 +32,7 @@ import Utils
 addToCluster :: Name -> [Cluster] -> [Cluster]
 addToCluster n [] = [Cluster [n] n]
 addToCluster n (c:cs)
-  | distanceFromCluster n c <= formulaDistance n ct = (Cluster ns $ evaluateCentre $ c):cs
+  | distanceFromCluster n c <= formulaDistance n ct = (Cluster (n:ns) ct):cs
   | otherwise = c:(addToCluster n cs)
   where
     Cluster ns ct = c
@@ -63,15 +63,11 @@ clusterify = reclusterify []
 -- |The 'clusterifyNames' function distributes the specified names in the specified clusters, using the 'addToCluster' function.
 clusterifyNames :: [Name] -> [Cluster] -> [Cluster]
 clusterifyNames [] cs = cs
-clusterifyNames (n:ns) cs = addToCluster n $ clusterify ns cs
+clusterifyNames (n:ns) cs = addToCluster n $ clusterifyNames ns cs
 
 -- |The 'distanceFromCluster' function computes the distance between a Name and a Cluster.
 distanceFromCluster :: Name -> Cluster -> Distance
 distanceFromCluster name (Cluster _ ct) = distance name ct
-
--- | TODO The 'evaluateCentre' function reevaluates the centre in the specified Cluster
-evaluateCentre :: Cluster -> Centre
-evaluateCentre (Cluster ns ct) = ct
 
 {-|
   The 'formulaDistance' function describes the formula used to evaluate the max distance that a word must be from
@@ -88,6 +84,10 @@ reclusterify :: [Cluster] -> [Name] -> [Cluster]
 reclusterify cs [] = cs
 reclusterify cs ns =
   let
-    newcs = clusterifyNames ns cs
+    newcs = reevaluateCentres $ clusterifyNames ns cs
     excluded = checkClusters newcs
   in reclusterify newcs excluded
+
+-- | TODO The 'reevaluateCentre' function reevaluates the centre in the specified Cluster
+reevaluateCentres :: [Cluster] -> [Cluster]
+reevaluateCentres cs = cs

@@ -6,8 +6,7 @@ import Utils
 
 displayClusters :: [Cluster] -> IO ()
 displayClusters [] = putStrLn "End."
-displayClusters (c:cs) = do putStr "Cluster: "
-                            putStrLn . show $ c
+displayClusters (c:cs) = do putStrLn . show $ c
                             displayClusters cs
 
 main :: IO ()
