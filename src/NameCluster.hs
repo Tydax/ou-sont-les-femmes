@@ -16,14 +16,28 @@ module NameCluster (
   checkClusters,
   clusterify,
   clusterifyNames,
+  computeAverageDistance,
+  computeAverageDistances,
   distanceFromCluster,
   formulaDistance,
   reclusterify,
+  reevaluateCentre,
   reevaluateCentres
 ) where
 
 import Types
 import Utils
+
+-- |The 'distanceFromCluster' function computes the distance between a Name and a Cluster.
+distanceFromCluster :: Name -> Cluster -> Distance
+distanceFromCluster name (Cluster _ ct) = distance name ct
+
+{-|
+  The 'formulaDistance' function describes the formula used to evaluate the max distance that a word must be from
+  the centre of a cluster to be considered as being part of the cluster.
+-}
+formulaDistance :: Name -> Name -> Distance
+formulaDistance n1 n2 = min (length n1) (length n2) `div` 2
 
 {-|
   The 'addToCluster' function adds the specified name to one of the clusters or creates a new cluster
@@ -36,6 +50,47 @@ addToCluster n (c:cs)
   | otherwise = c:(addToCluster n cs)
   where
     Cluster ns ct = c
+
+-- |The 'clusterifyNames' function distributes the specified names in the specified clusters, using the 'addToCluster' function.
+clusterifyNames :: [Name] -> [Cluster] -> [Cluster]
+clusterifyNames [] cs = cs
+clusterifyNames (n:ns) cs = addToCluster n $ clusterifyNames ns cs
+
+-- |The 'computeAverageDsitance' function computes the arithmetic mean of the distance of the specified centre to all the names.
+computeAverageDistance :: [Name] -> Centre -> (Distance, Centre)
+computeAverageDistance ns ct =
+  let
+    filteredns = filter (ct /=) ns -- Exclude its own name
+    dist = mean $ map (distance ct) filteredns
+  in (dist, ct)
+
+{-|
+  The 'computeAverageDistances' function computes the average distance of all the names to each
+  name as a centre. The average distance is associated with each name to help finding out which
+  one is the best pseudo-centre to use.
+-}
+computeAverageDistances :: [Name] -> [(Distance, Centre)]
+computeAverageDistances ns = map (computeAverageDistance ns) ns 
+
+{-|
+  The 'reevaluateCentre' function reevaluate the centre of the specified cluster.
+  To do so, the function computes the average distance of each name to all the other names, and
+  takes as a pseudo-centre the name with the shortest distance to all the names.
+-}
+reevaluateCentre :: Cluster -> Cluster
+reevaluateCentre (Cluster (n:[]) ct) = Cluster [n] ct
+reevaluateCentre (Cluster ns _) =
+  let
+    cts = computeAverageDistances ns -- Compute the average distance for each name
+    mindist = minimum $ map fst cts -- Get the minimum distance
+    Just ct = lookup mindist cts -- Get the name associated to that minimum distance
+  in 
+    Cluster ns ct
+
+
+-- |The 'reevaluateCentres' function reevaluates the centre of every specified clusters.
+reevaluateCentres :: [Cluster] -> [Cluster]
+reevaluateCentres = map reevaluateCentre
 
 {-|
   The 'checkCluster' function checks that the specified cluster is still consistent considering that the centre of
@@ -53,28 +108,7 @@ checkCluster c
 
 -- |The 'checkClusters' function checks that all clusters are still consistent calling the 'checkCluster' function.
 checkClusters :: [Cluster] -> [Name]
-checkClusters [] = []
-checkClusters (c:cs) = checkCluster c ++ checkClusters cs
-
--- |An alias for the 'reclusterify' function used as an entry point for the recursion.
-clusterify :: [Name] -> [Cluster]
-clusterify = reclusterify []
-
--- |The 'clusterifyNames' function distributes the specified names in the specified clusters, using the 'addToCluster' function.
-clusterifyNames :: [Name] -> [Cluster] -> [Cluster]
-clusterifyNames [] cs = cs
-clusterifyNames (n:ns) cs = addToCluster n $ clusterifyNames ns cs
-
--- |The 'distanceFromCluster' function computes the distance between a Name and a Cluster.
-distanceFromCluster :: Name -> Cluster -> Distance
-distanceFromCluster name (Cluster _ ct) = distance name ct
-
-{-|
-  The 'formulaDistance' function describes the formula used to evaluate the max distance that a word must be from
-  the centre of a cluster to be considered as being part of the cluster.
--}
-formulaDistance :: Name -> Name -> Distance
-formulaDistance n1 n2 = min (length n1) (length n2) `div` 2
+checkClusters = concatMap checkCluster
 
 {-|
   'reclusterify' is a recursive function checking at each call that the clusters are consistent
@@ -88,6 +122,6 @@ reclusterify cs ns =
     excluded = checkClusters newcs
   in reclusterify newcs excluded
 
--- | TODO The 'reevaluateCentre' function reevaluates the centre in the specified Cluster
-reevaluateCentres :: [Cluster] -> [Cluster]
-reevaluateCentres cs = cs
+-- |An alias for the 'reclusterify' function used as an entry point for the recursion.
+clusterify :: [Name] -> [Cluster]
+clusterify = reclusterify []

@@ -10,7 +10,8 @@
   The $Header$ module describes the generic util functions.
 -}
 module Utils (
-  distance
+  distance,
+  mean
 ) where
 
 import Types
@@ -23,3 +24,8 @@ import Text.EditDistance
 -}
 distance :: String -> String -> Distance
 distance = levenshteinDistance defaultEditCosts
+
+-- |The 'myMean' functions computes the arithmetic mean of the specified list of numbers, excluding one number.
+mean :: [Int] -> Int
+mean [] = 0
+mean nbs = (sum nbs) `div` (length nbs)
