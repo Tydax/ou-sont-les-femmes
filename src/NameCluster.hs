@@ -38,7 +38,7 @@ distanceFromCluster name (Cluster _ ct) = distance name ct
   the centre of a cluster to be considered as being part of the cluster.
 -}
 formulaDistance :: Name -> Name -> Distance
-formulaDistance n1 n2 = min (length n1) (length n2) `div` 2
+formulaDistance n1 n2 = max (length n1) (length n2) `div` 2
 
 {-|
   The 'addToCluster' function adds the specified name to one of the clusters or creates a new cluster
