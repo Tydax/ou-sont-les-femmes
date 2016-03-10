@@ -27,6 +27,7 @@ module NameCluster (
 
 import Types
 import Utils
+import Debug.Trace
 
 -- |The 'distanceFromCluster' function computes the distance between a Name and a Cluster.
 distanceFromCluster :: Name -> Cluster -> Distance
@@ -47,7 +48,7 @@ addToCluster :: Name -> [Cluster] -> [Cluster]
 addToCluster n [] = [Cluster [n] n]
 addToCluster n (c:cs)
   | distanceFromCluster n c <= formulaDistance n ct = (Cluster (n:ns) ct):cs
-  | otherwise = c:(addToCluster n cs)
+  | otherwise = c:addToCluster n cs
   where
     Cluster ns ct = c
 
@@ -100,15 +101,26 @@ reevaluateCentres = map reevaluateCentre
 checkCluster :: Cluster -> [Name]
 checkCluster (Cluster [] _) = []
 checkCluster c
-  | distanceFromCluster n c > formulaDistance n ct = (n:recursive)
+  | distanceFromCluster n c > formulaDistance n ct = n:recursive
   | otherwise = recursive
   where 
     Cluster (n:ns) ct = c
     recursive = checkCluster (Cluster ns ct)
 
 -- |The 'checkClusters' function checks that all clusters are still consistent calling the 'checkCluster' function.
-checkClusters :: [Cluster] -> [Name]
-checkClusters = concatMap checkCluster
+checkClusters :: [Cluster] -> [(Cluster, [Name])]
+checkClusters [] = []
+checkClusters (c:cs) =
+  let
+    excluded = checkCluster c
+    newc =
+      case excluded of
+        [] -> c
+        _  ->
+          let Cluster ns ct = c
+          in Cluster (filter (flip notElem excluded) ns) ct -- Cleansing the cluster from excluded names if relevant
+  in
+    (newc, excluded):checkClusters cs
 
 {-|
   'reclusterify' is a recursive function checking at each call that the clusters are consistent
@@ -119,8 +131,8 @@ reclusterify cs [] = cs
 reclusterify cs ns =
   let
     newcs = reevaluateCentres $ clusterifyNames ns cs
-    excluded = checkClusters newcs
-  in reclusterify newcs excluded
+    (updatedcs, excluded) = unzip (checkClusters newcs)
+  in reclusterify updatedcs (concat excluded)
 
 -- |An alias for the 'reclusterify' function used as an entry point for the recursion.
 clusterify :: [Name] -> [Cluster]
