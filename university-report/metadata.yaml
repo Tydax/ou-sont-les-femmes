@@ -1,9 +1,13 @@
 ---
-title: 'Où sont les femmes'
-subtitle: 'Projet individuel'
-author:
-  - name: 'Armand BOUR'
-  - affiliation: 'Étudiant à l'Université de Lille 1'
-tags: []
+title: Où sont les femmes ?
+subtitle: Projet individuel
+author: 
+  - name: Armand BOUR
+    affiliation: Étudiant à l'Université de Lille 1
+date: Dimanche 6 mars 2016
+lang: fr-FR
+tags: [haskell, projet, master, informatique, lille, féminisme]
+abstract: Analyse du problème et description de la solution proposée
+defaultfont: cmss
 toc: true
 ---
