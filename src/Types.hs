@@ -13,9 +13,9 @@
 module Types (
   Centre,
   Cluster(Cluster),
+  ClusterRecord(ClusterRecord),
   Distance,
-  Name,
-  Gender(Female, Other)
+  Name
 ) where
 
 -- |The 'Centre' represents the centre of a cluster.
@@ -28,7 +28,7 @@ type Centre = Name
 data Cluster = Cluster [Name] Centre deriving (Show)
 
 -- |The 'ClusterRecord' represent one record in CSV for a name of a cluster.
-type ClusterRecord = (Centre, Name) 
+newtype ClusterRecord = ClusterRecord (Centre, Name) 
 
 {-|
   The 'Distance' type describes the Levenshtein distance between two strings,
