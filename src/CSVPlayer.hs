@@ -1,6 +1,6 @@
 {- |
   Module      :  $Header$
-  Description :  Describes the functions used to load and write the CSV files
+  Description :  Describes the functions used to load and write CSV files
   Copyright   :  None
   License     :  None
 
@@ -23,12 +23,13 @@ import Data.Csv
 
 import Types
 
--- |Implementation of ToRecord for a ClusteRecord.
+-- |Implementation of 'Data.Csv.ToNamedRecord' for a 'Types.ClusterRecord'.
 instance ToNamedRecord ClusterRecord where
   toNamedRecord (ClusterRecord (ct, n)) =
     let h1:h2:_ = clusterHeader
     in namedRecord [h1 .= ct, h2 .= n]
 
+-- |Implementation of 'Data.Csv.DefaultOrdered' for a 'Types.ClusterRecord'.
 instance DefaultOrdered ClusterRecord where
   headerOrder _ = header clusterHeader
 
@@ -36,14 +37,14 @@ instance DefaultOrdered ClusterRecord where
 clusterHeader :: [BS.ByteString]
 clusterHeader = [toField "Pseudocentre", toField "Name"]
 
--- |Converts a Cluster to a list of ClusterRecords for CSV conversion.
+-- |Converts a 'Type.Cluster' to a list of 'Types.ClusterRecord's for CSV conversion.
 toClusterRecords :: Cluster -> [ClusterRecord]
 toClusterRecords (Cluster ns ct) = map (\n -> ClusterRecord (ct, n)) ns
 
--- |Converts a list of Clusters to a list of ClusterRecords for CSV conversion.
+-- |Converts a list of 'Type.Cluster's to a list of 'Types.ClusterRecord's for CSV conversion.
 toClusterRecordsAll :: [Cluster] -> [ClusterRecord]
 toClusterRecordsAll = concat . map toClusterRecords
 
--- |Converts a list of Clusters to a CSV.
+-- |Converts a list of 'Type.Cluster's to a CSV.
 convertClustersToCSV :: [Cluster] -> LazyBS.ByteString
 convertClustersToCSV = encodeDefaultOrderedByName . toClusterRecordsAll

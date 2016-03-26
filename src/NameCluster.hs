@@ -29,20 +29,21 @@ import Types
 import Utils
 import Debug.Trace
 
--- |The 'distanceFromCluster' function computes the distance between a Name and a Cluster.
+-- |Computes the distance between a Name and a 'Type.Cluster'.
 distanceFromCluster :: Name -> Cluster -> Distance
 distanceFromCluster name (Cluster _ ct) = distance name ct
 
 {-|
-  The 'formulaDistance' function describes the formula used to evaluate the max distance that a word must be from
+  Describes the formula used to evaluate the maximum distance that a word must be from
   the centre of a cluster to be considered as being part of the cluster.
 -}
 formulaDistance :: Name -> Name -> Distance
 formulaDistance n1 n2 = max (length n1) (length n2) `div` 2
 
 {-|
-  The 'addToCluster' function adds the specified name to one of the clusters or creates a new cluster
-  if the distance is greater than all the others.
+  Adds the specified name to one of the clusters or creates a new cluster
+  if the distances to the centre of the clusters are greater than the maximum
+  distance possible.
 -}
 addToCluster :: Name -> [Cluster] -> [Cluster]
 addToCluster n [] = [Cluster [n] n]
@@ -52,12 +53,12 @@ addToCluster n (c:cs)
   where
     Cluster ns ct = c
 
--- |The 'clusterifyNames' function distributes the specified names in the specified clusters, using the 'addToCluster' function.
+-- |Distributes the specified names in the specified clusters, using the 'addToCluster' function.
 clusterifyNames :: [Name] -> [Cluster] -> [Cluster]
 clusterifyNames [] cs = cs
 clusterifyNames (n:ns) cs = addToCluster n $ clusterifyNames ns cs
 
--- |The 'computeAverageDsitance' function computes the arithmetic mean of the distance of the specified centre to all the names.
+-- |Computes the arithmetic mean of the distances of the specified centre to all the names.
 computeAverageDistance :: [Name] -> Centre -> (Distance, Centre)
 computeAverageDistance ns ct =
   let
@@ -66,17 +67,17 @@ computeAverageDistance ns ct =
   in (dist, ct)
 
 {-|
-  The 'computeAverageDistances' function computes the average distance of all the names to each
-  name as a centre. The average distance is associated with each name to help finding out which
+  Computes the average distance of all the names to each name as a centre.
+  The average distance is associated with each name to help finding out which
   one is the best pseudo-centre to use.
 -}
 computeAverageDistances :: [Name] -> [(Distance, Centre)]
 computeAverageDistances ns = map (computeAverageDistance ns) ns 
 
 {-|
-  The 'reevaluateCentre' function reevaluate the centre of the specified cluster.
+  Reevaluates the centre of the specified cluster.
   To do so, the function computes the average distance of each name to all the other names, and
-  takes as a pseudo-centre the name with the shortest distance to all the names.
+  takes as a pseudo-centre the name with the shortest distance to every name.
 -}
 reevaluateCentre :: Cluster -> Cluster
 reevaluateCentre (Cluster (n:[]) ct) = Cluster [n] ct
@@ -89,14 +90,14 @@ reevaluateCentre (Cluster ns _) =
     Cluster ns ct
 
 
--- |The 'reevaluateCentres' function reevaluates the centre of every specified clusters.
+-- |Reevaluates the centre of every specified clusters.
 reevaluateCentres :: [Cluster] -> [Cluster]
 reevaluateCentres = map reevaluateCentre
 
 {-|
-  The 'checkCluster' function checks that the specified cluster is still consistent considering that the centre of
-  each cluster has been reevaluated each time that a name has been added to it.
-  The output is a list of names that were taken out of their clusters and that need to be clusterified again.
+  Checks that the specified cluster is still consistent considering that each time a name has been added to
+  it, the pseudo-centre might change.
+  The output is a list of names that were taken out of their clusters and that needs to be clusterified again.
 -}
 checkCluster :: Cluster -> [Name]
 checkCluster (Cluster [] _) = []
@@ -107,7 +108,7 @@ checkCluster c
     Cluster (n:ns) ct = c
     recursive = checkCluster (Cluster ns ct)
 
--- |The 'checkClusters' function checks that all clusters are still consistent calling the 'checkCluster' function.
+-- |Checks that all clusters are still consistent calling the 'checkCluster' function.
 checkClusters :: [Cluster] -> [(Cluster, [Name])]
 checkClusters [] = []
 checkClusters (c:cs) =
@@ -123,8 +124,9 @@ checkClusters (c:cs) =
     (newc, excluded):checkClusters cs
 
 {-|
-  'reclusterify' is a recursive function checking at each call that the clusters are consistent
-  using the 'checkClusters' function. If they are not consistent, 'reclusterify' calls itself again.
+  Reclusterifies the specified clusters until no names are exluded from the clusters,
+  reevaluating the centres (with 'reevaluateCentres') and checking that the clusters
+  are still consistent at each call (with 'checkClusters').
 -}
 reclusterify :: [Cluster] -> [Name] -> [Cluster]
 reclusterify cs [] = cs

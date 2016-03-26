@@ -18,24 +18,20 @@ module Types (
   Name
 ) where
 
--- |The 'Centre' represents the centre of a cluster.
+-- |Pseudocentre of a 'Cluster'.
 type Centre = Name
 
-{-|
-  The 'Cluster' type describes a group containing names which distance 
-  is short.
--}
+-- |A group containing 'Name's which distance  is short.
 data Cluster = Cluster [Name] Centre deriving (Show)
 
--- |The 'ClusterRecord' represent one record in CSV for a name of a cluster.
-newtype ClusterRecord = ClusterRecord (Centre, Name) 
+-- |A record in CSV for a 'Name' of a 'Cluster'.
+newtype ClusterRecord = ClusterRecord (Centre, Name) deriving (Show)
 
 {-|
-  The 'Distance' type describes the Levenshtein distance between two strings,
-  using an integer to represent how many letter operations is needed to transform
-  a word into the other word.
+  The Levenshtein distance between two strings, using an integer to represent how many letter
+  operations are needed to transform a word into the other word.
 -}
 type Distance = Int
 
--- |The 'Name' type describes a name.
+-- |A name.
 type Name = String
