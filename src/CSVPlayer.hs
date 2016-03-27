@@ -12,7 +12,7 @@
 -}
 module CSVPlayer (
   clusterHeader,
-  convertClustersToCSV,
+  convertClustersToCSVString,
   toClusterRecords,
   toClusterRecordsAll
 ) where
@@ -46,5 +46,6 @@ toClusterRecordsAll :: [Cluster] -> [ClusterRecord]
 toClusterRecordsAll = concat . map toClusterRecords
 
 -- |Converts a list of 'Type.Cluster's to a CSV.
-convertClustersToCSV :: [Cluster] -> LazyBS.ByteString
-convertClustersToCSV = encodeDefaultOrderedByName . toClusterRecordsAll
+convertClustersToCSVString :: [Cluster] -> LazyBS.ByteString
+convertClustersToCSVString = encodeDefaultOrderedByName . toClusterRecordsAll
+
