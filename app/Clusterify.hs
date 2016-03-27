@@ -1,7 +1,6 @@
 module Main where
 
-import qualified Data.ByteString.Lazy as LazyBS
-import qualified System.IO as Sys
+import System.IO
 
 import CSVPlayer
 import Types
@@ -13,30 +12,31 @@ stringifyClusters :: [String] -> String
 stringifyClusters ns = (show . clusterify) ns
 
 -- |Clusterifies the specified names and encodes the result into a CSV formatted String.
-stringifyCSV :: [String] -> LazyBS.ByteString
-stringifyCSV ns = (convertClustersToCSVString . clusterify) ns
+stringifyCSV :: [String] -> String
+stringifyCSV ns = (show . convertClustersToCSVString . clusterify) ns
 
 -- |A bunch of hardcoded values used as a quick test.
-hardcodedValues :: String
-hardcodedValues = "Armand Arnaud Theo Alex \
+hardcodedValues :: [String]
+hardcodedValues = words "Armand Arnaud Theo Alex \
 \ Adrien Tristan Alexandra Julien Juliette Ilhem Alyx Tristan Alexis Alexandre Theo Thibault Thomas \
 \ Armande Armando Alexia"
 
 -- |Uses hard-coded values as a test for clusterification.
-displayHardCodedValues :: Sys.Handle -> IO ()
-displayHardCodedValues h = (LazyBS.hPut h . stringifyCSV . words) hardcodedValues
+displayHardCodedValues :: IO ()
+displayHardCodedValues = (putStrLn . show . stringifyCSV) hardcodedValues
 
 -- |Uses input as a list of names for clusterification.
 displayInputValues :: IO ()
 displayInputValues =
   do
-    Sys.putStrLn "List your names separated by spaces: "
+    putStrLn "List your names separated by spaces: "
     interact (show . stringifyCSV . words)
 
-writeToFile :: (Sys.Handle -> IO ()) -> IO ()
-writeToFile input =
+writeCSVFileHardCodedValues :: IO ()
+writeCSVFileHardCodedValues =
   do
-    Sys.withFile "out/clusters.csv" Sys.WriteMode input
+    putStrLn "Generating clusters and writing to CSV file..."
+    writeCSVFile "clusters" (toClusterRecordsAll . clusterify $ hardcodedValues)
 
 main :: IO ()
-main = writeToFile displayHardCodedValues
+main = writeCSVFileHardCodedValues

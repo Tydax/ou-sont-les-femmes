@@ -14,7 +14,8 @@ module CSVPlayer (
   clusterHeader,
   convertClustersToCSVString,
   toClusterRecords,
-  toClusterRecordsAll
+  toClusterRecordsAll,
+  writeCSVFile
 ) where
 
 import qualified Data.ByteString as BS
@@ -49,3 +50,6 @@ toClusterRecordsAll = concat . map toClusterRecords
 convertClustersToCSVString :: [Cluster] -> LazyBS.ByteString
 convertClustersToCSVString = encodeDefaultOrderedByName . toClusterRecordsAll
 
+-- |Writes the specified 'Data.ByteString.Lazy' to a .csv file, using the given name.
+writeCSVFile :: (DefaultOrdered a, ToNamedRecord a) => FilePath -> [a] -> IO ()
+writeCSVFile n = LazyBS.writeFile ("out/" ++ n ++ ".csv") . encodeDefaultOrderedByName
