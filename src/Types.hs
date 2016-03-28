@@ -35,3 +35,9 @@ type Distance = Int
 
 -- |A name.
 type Name = String
+
+{-|
+  The 'Gender' type is used to represent the gender of a name.
+  'Other' is used for the other names that are not considered female names just for the sake of non-binarity.
+-}
+data Gender = Female | Other
