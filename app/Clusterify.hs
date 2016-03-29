@@ -32,6 +32,13 @@ displayInputValues =
     putStrLn "List your names separated by spaces: "
     interact (show . stringifyCSV . words)
 
+writeCSVFileInputValues :: IO ()
+writeCSVFileInputValues =
+  do
+    putStrLn "List your names separated by spaces: "
+    names <- getLine
+    writeCSVFile "clusters" (toClusterRecordsAll . clusterify . words $ names)
+
 writeCSVFileHardCodedValues :: IO ()
 writeCSVFileHardCodedValues =
   do
@@ -39,4 +46,4 @@ writeCSVFileHardCodedValues =
     writeCSVFile "clusters" (toClusterRecordsAll . clusterify $ hardcodedValues)
 
 main :: IO ()
-main = writeCSVFileHardCodedValues
+main = writeCSVFileInputValues
