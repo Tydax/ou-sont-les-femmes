@@ -1,6 +1,10 @@
 module Main where
 
+import Data.Time.Clock
+import Data.Time.Format
+import Data.Time.LocalTime
 import System.IO
+--import System.Locale
 
 import CSVPlayer
 import Types
@@ -43,7 +47,21 @@ writeCSVFileHardCodedValues :: IO ()
 writeCSVFileHardCodedValues =
   do
     putStrLn "Generating clusters and writing to CSV file..."
-    writeCSVFile "clusters" (toClusterRecordsAll . clusterify $ hardcodedValues)
+    timezone <- getCurrentTimeZone
+    utcTime <- getCurrentTime
+    let localTime = utcToLocalTime timezone utcTime -- Getting current time for filename
+    let filename = formatTime defaultTimeLocale "%Y-%m-%dh%H-%M-%S" localTime -- Formatting time for filename
+    writeCSVFile filename (toClusterRecordsAll . clusterify $ hardcodedValues)
+
+
+-- |Gets the date and time of day in the current timezone.
+--getDateAndTime :: TimeOfDay
+--getDateAndTime =
+--  do
+
+--    return (timeOfDay)
+--  in
+--    timeOfDay
 
 main :: IO ()
-main = writeCSVFileInputValues
+main = writeCSVFileHardCodedValues
