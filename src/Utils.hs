@@ -15,12 +15,12 @@ module Utils (
   rmdups
 ) where
 
+import Data.Char
 import qualified Data.Set as Set
 
 import Text.EditDistance
 
 import Types
-
 
 {-|
   Computes the Leveinshtein distance between two strings,
@@ -28,7 +28,12 @@ import Types
   a word into the other word.
 -}
 distance :: String -> String -> Distance
-distance = levenshteinDistance defaultEditCosts
+distance n1 n2 =
+  let
+    lower = \cs -> [toLower c | c <- cs]
+    ln1 = lower n1
+    ln2 = lower n2
+  in levenshteinDistance defaultEditCosts ln1 ln2
 
 -- |Computes the arithmetic mean of the specified list of numbers, excluding one number.
 mean :: [Int] -> Int

@@ -22,13 +22,13 @@ stringifyClusters ns = (show . clusterify) ns
 stringifyCSV :: [String] -> String
 stringifyCSV ns = (show . convertClustersToCSVString . clusterify) ns
 
--- |A bunch of hardcoded values used as a quick test.
+-- TEST
 hardcodedValues :: [String]
 hardcodedValues = words "Armand Arnaud Theo Alex Adrien Tristan Alexandra \
 \ Julien Juliette Ilhem Alyx Tristan Alexis Alexandre Theo Thibault Thomas \
 \ Armande Armando Alexia"
 
--- |Uses hard-coded values as a test for clusterification.
+-- TEST
 displayHardCodedValues :: IO ()
 displayHardCodedValues = (putStrLn . show . stringifyCSV) hardcodedValues
 
@@ -37,8 +37,9 @@ displayInputValues :: IO ()
 displayInputValues =
   do
     putStrLn "List your names separated by spaces: "
-    interact (show . stringifyCSV . words)
+    interact (show . stringifyClusters . words)
 
+-- |Clusterifies input values and writes the result to a new CSV file.
 writeCSVFileInputValues :: IO ()
 writeCSVFileInputValues =
   do
@@ -46,27 +47,24 @@ writeCSVFileInputValues =
     names <- getLine
     writeCSVFile "clusters" (toClusterRecordsAll . clusterify . words $ names)
 
+-- TEST
 writeCSVFileHardCodedValues :: IO ()
 writeCSVFileHardCodedValues =
   do
-    putStrLn "Generating clusters and writing to CSV file..."
+    filename <- generateFilenameFromTime
+    writeCSVFile filename (toClusterRecordsAll . clusterify $ hardcodedValues)
+
+-- |Generates a file name from the current time.
+generateFilenameFromTime :: IO String
+generateFilenameFromTime =
+  do
     timezone <- getCurrentTimeZone
     utcTime <- getCurrentTime
     -- Getting current time for filename
     let localTime = utcToLocalTime timezone utcTime
     -- Formatting time for filename
-    let filename = formatTime defaultTimeLocale "%Y-%m-%dh%H-%M-%S" localTime
-    writeCSVFile filename (toClusterRecordsAll . clusterify $ hardcodedValues)
-
-
--- |Gets the date and time of day in the current timezone.
---getDateAndTime :: TimeOfDay
---getDateAndTime =
---  do
-
---    return (timeOfDay)
---  in
---    timeOfDay
+    let filename = formatTime defaultTimeLocale "%Y-%m-%d_%H-%M-%S" localTime
+    return filename
 
 main :: IO ()
-main = writeCSVFileHardCodedValues
+main = displayInputValues
