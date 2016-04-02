@@ -155,4 +155,4 @@ reclusterify cs ns =
   recursion.
 -}
 clusterify :: [Name] -> [Cluster]
-clusterify = reclusterify []
+clusterify = reclusterify [] . rmdups

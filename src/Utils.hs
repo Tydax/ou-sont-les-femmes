@@ -11,8 +11,11 @@
 -}
 module Utils (
   distance,
-  mean
+  mean,
+  rmdups
 ) where
+
+import qualified Data.Set as Set
 
 import Text.EditDistance
 
@@ -31,3 +34,11 @@ distance = levenshteinDistance defaultEditCosts
 mean :: [Int] -> Int
 mean [] = 0
 mean nbs = (sum nbs) `div` (length nbs)
+
+-- |Deletes the dupplicated values from the specified list.
+rmdups :: Ord a => [a] -> [a]
+rmdups = rmdups' Set.empty where
+  rmdups' _ [] = []
+  rmdups' a (b:c) =
+    if Set.member b a then rmdups' a c
+    else b : rmdups' (Set.insert b a) c
