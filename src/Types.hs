@@ -16,7 +16,9 @@ module Types (
   Cluster(Cluster),
   ClusterRecord(ClusterRecord),
   Distance,
-  Name
+  Name,
+  Gender (Female, Other),
+  GenderedName(GenderedName)
 ) where
 
 -- |Pseudocentre of a 'Cluster'.
@@ -38,8 +40,10 @@ type Distance = Int
 type Name = String
 
 {-|
-  The 'Gender' type is used to represent the gender of a name.
-  'Other' is used for the other names that are not considered
-  female names just for the sake of non-binarity.
+  Represents the gender of a name. 'Other' is used for the other names that are
+  not considered female names just for the sake of non-binarity.
 -}
-data Gender = Female | Other
+data Gender = Female | Other deriving (Show)
+
+-- |A 'Name' associated with a 'Gender'.
+newtype GenderedName = GenderedName (Name, Gender) deriving (Show)
