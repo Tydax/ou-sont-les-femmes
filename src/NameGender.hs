@@ -7,8 +7,9 @@
   Maintainer  :  tydax@protonmail.ch
   Stability   :  unstable
 
-  The $Header$ module describes the different functions used to eveluate the gender of a name.
+  The $Header$ module describes the different functions used to eveluate the
+  gender of a name.
 -}
 module NameGender (
-  
+
 ) where

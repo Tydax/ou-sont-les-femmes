@@ -7,8 +7,9 @@
   Maintainer  :  tydax@protonmail.ch
   Stability   :  unstable
 
-  The $Header$ module describes the different functions used to load the database files
-  under the CSV format. It also provides functions to produce the .CSV files.
+  The $Header$ module describes the different functions used to load the
+  database files under the CSV format. It also provides functions to produce
+  the .CSV files.
 -}
 module CSVPlayer (
   clusterHeader,
@@ -38,11 +39,17 @@ instance DefaultOrdered ClusterRecord where
 clusterHeader :: [BS.ByteString]
 clusterHeader = [toField "Pseudocentre", toField "Name"]
 
--- |Converts a 'Type.Cluster' to a list of 'Types.ClusterRecord's for CSV conversion.
+{-|
+  Converts a 'Type.Cluster' to a list of 'Types.ClusterRecord's for CSV
+  conversion.
+-}
 toClusterRecords :: Cluster -> [ClusterRecord]
 toClusterRecords (Cluster ns ct) = map (\n -> ClusterRecord (ct, n)) ns
 
--- |Converts a list of 'Type.Cluster's to a list of 'Types.ClusterRecord's for CSV conversion.
+{-|
+  Converts a list of 'Type.Cluster's to a list of 'Types.ClusterRecord's
+  for CSV conversion.
+-}
 toClusterRecordsAll :: [Cluster] -> [ClusterRecord]
 toClusterRecordsAll = concat . map toClusterRecords
 
@@ -50,6 +57,10 @@ toClusterRecordsAll = concat . map toClusterRecords
 convertClustersToCSVString :: [Cluster] -> LazyBS.ByteString
 convertClustersToCSVString = encodeDefaultOrderedByName . toClusterRecordsAll
 
--- |Writes the specified 'Data.ByteString.Lazy' to a .csv file, using the given name.
+{-|
+  Writes the specified 'Data.ByteString.Lazy' to a .csv file, using the given
+  name.
+-}
 writeCSVFile :: (DefaultOrdered a, ToNamedRecord a) => FilePath -> [a] -> IO ()
-writeCSVFile n = LazyBS.writeFile ("out/" ++ n ++ ".csv") . encodeDefaultOrderedByName
+writeCSVFile n =
+  LazyBS.writeFile ("out/" ++ n ++ ".csv") . encodeDefaultOrderedByName

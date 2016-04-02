@@ -15,14 +15,17 @@ import Utils
 stringifyClusters :: [String] -> String
 stringifyClusters ns = (show . clusterify) ns
 
--- |Clusterifies the specified names and encodes the result into a CSV formatted String.
+{-|
+  Clusterifies the specified names and encodes the result into a CSV formatted
+  String.
+-}
 stringifyCSV :: [String] -> String
 stringifyCSV ns = (show . convertClustersToCSVString . clusterify) ns
 
 -- |A bunch of hardcoded values used as a quick test.
 hardcodedValues :: [String]
-hardcodedValues = words "Armand Arnaud Theo Alex \
-\ Adrien Tristan Alexandra Julien Juliette Ilhem Alyx Tristan Alexis Alexandre Theo Thibault Thomas \
+hardcodedValues = words "Armand Arnaud Theo Alex Adrien Tristan Alexandra \
+\ Julien Juliette Ilhem Alyx Tristan Alexis Alexandre Theo Thibault Thomas \
 \ Armande Armando Alexia"
 
 -- |Uses hard-coded values as a test for clusterification.
@@ -49,8 +52,10 @@ writeCSVFileHardCodedValues =
     putStrLn "Generating clusters and writing to CSV file..."
     timezone <- getCurrentTimeZone
     utcTime <- getCurrentTime
-    let localTime = utcToLocalTime timezone utcTime -- Getting current time for filename
-    let filename = formatTime defaultTimeLocale "%Y-%m-%dh%H-%M-%S" localTime -- Formatting time for filename
+    -- Getting current time for filename
+    let localTime = utcToLocalTime timezone utcTime
+    -- Formatting time for filename
+    let filename = formatTime defaultTimeLocale "%Y-%m-%dh%H-%M-%S" localTime
     writeCSVFile filename (toClusterRecordsAll . clusterify $ hardcodedValues)
 
 
