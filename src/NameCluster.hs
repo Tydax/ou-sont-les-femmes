@@ -27,7 +27,6 @@ module NameCluster (
 
 import Types
 import Utils
-import Debug.Trace
 
 -- |Computes the distance between a Name and a 'Type.Cluster'.
 distanceFromCluster :: Name -> Cluster -> Distance

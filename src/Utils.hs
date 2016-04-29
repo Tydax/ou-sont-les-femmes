@@ -30,7 +30,7 @@ import Types
 distance :: String -> String -> Distance
 distance n1 n2 =
   let
-    lower = \cs -> [toLower c | c <- cs]
+    lower = map toLower
     ln1 = lower n1
     ln2 = lower n2
   in levenshteinDistance defaultEditCosts ln1 ln2

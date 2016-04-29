@@ -14,11 +14,13 @@
 module CSVPlayer (
   clusterHeader,
   convertClustersToCSVString,
+  genderedNameHeader,
   toClusterRecords,
   toClusterRecordsAll,
   writeCSVFile
 ) where
 
+import Control.Monad
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as LazyBS
 import Data.Csv
@@ -56,6 +58,32 @@ toClusterRecordsAll = concat . map toClusterRecords
 -- |Converts a list of 'Type.Cluster's to a CSV.
 convertClustersToCSVString :: [Cluster] -> LazyBS.ByteString
 convertClustersToCSVString = encodeDefaultOrderedByName . toClusterRecordsAll
+
+-- |Implementation of 'Data.Csv.FromRecord' for a 'Types.GenderedName'.
+instance FromRecord GenderedName where
+  parseRecord r
+    | length r >= 2 =
+      let
+        f = \x -> if x == 'f'
+          then Female
+          else Other
+        gender = f <$> (r .! 1)
+        tuple = (,) <$> (r .! 0) <*> gender
+      in GenderedName <$> tuple
+    | otherwise = mzero
+
+-- |Implementation of 'Data.Csv.ToNamedRecord' for a 'Types.GenderedName'.
+-- instance ToNamedRecord GenderedName where
+--   toNamedRecord (GenderedName (n, g)) =
+--     let h1:h2:_ = genderedNameHeader
+--     in namedRecord [h1 .= n, h2 .= g]
+
+-- |Implementation of 'Data.Csv.DefaultOrdered' for a 'Types.GenderedName'.
+instance DefaultOrdered GenderedName where
+  headerOrder _ = header genderedNameHeader
+
+-- |Gets the headers for the gendered name .CSV file.
+genderedNameHeader = [toField "Name", toField "Gender"]
 
 {-|
   Writes the specified 'Data.ByteString.Lazy' to a .csv file, using the given
