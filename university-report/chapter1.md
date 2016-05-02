@@ -1,3 +1,15 @@
 # Étude de la problèmatique
+## Description du problème
+Comme évoqué dans l’introduction, l’objectif du projet est de fournir différents outils pour permettre une étude sociologique sur la présence des femmes dans le milieu scientifique. Plus précisément, nous avons à notre disposition une base de citations issues de revues scientifiques avec le nom de leur auteur, et nous souhaitons pouvoir extraire des données à partir de cette base.
+
+Bien évidemment, le premier obstacle que l’on peut remarquer, et sûrement le principal, est le suivant : le genre de l’auteur n’est pas indiqué dans la base, rendant difficile l’étude. En réalité, il s’agit même de la raison d’être de ce projet. Il faudrait donc pouvoir déterminer le genre d’un auteur à partir de son prénom. À cela s’ajoute les embûches liées aux prénoms : prénoms unisexe, différentes langues, différentes cultures, etc. Nous n’avions également pas la certitude que les données n’étaient pas bruitées, ce qui compliquait encore le travail, notamment sur les noms de revues.
+
+Quant à ces derniers, ils présentaient un second problème : il se pouvait que les données ne soient pas entièrement homogènes. Cela veut dire que dans certains cas, le nom de la revue pouvait être stocké en clair, et dans d’autres occurrences, être abrégé ou orthographié différemment. 
+
 ## Découpage du problème
+Nous étions plusieurs étudiants à être intéressés par ce sujet de projet. C’est pourquoi le sujet a été découpé en deux parties par notre tuteur de projet, afin de permettre à tous les étudiants intéressés d’y participer et de l’approfondir. Comme indiqué auparavant dans l’introduction, une partie consistait à produire une interface pour que l’humain ait accès à différents outils pour lister les noms et les classées, et l’autre avait pour objectif d’écrire des algorithmes de classification sur les prénoms ainsi que les titres de revues afin de pouvoir les présenter à l’humain sous une autre forme. C’est cette partie qui nous concerne ici.
+
 ## Solution proposée
+Au prime abord, je souhaitais tenter de développer un outil complet et complexe se chargeant de traiter toutes les données automatiquement et donner un simple résultat. En discutant avec mon tuteur, il nous a semblé plus judicieux et plus abordable de proposer plusieurs outils qui ne répondraient pas au problème dans sa totalité, mais qui pourraient être combinés afin d’aiguiller l’utilisateur dans l’étude. On laisserait alors une part importante de choix et décision pour l’humain.
+
+Ainsi, parmi ces outils, j’ai développé un algorithme permettant de classifier les noms par similarité orthographique, un simple comparateur pour déduire le genre selon une base, et un second algorithme de groupement pour les noms de revues.
