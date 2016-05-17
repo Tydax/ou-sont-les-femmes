@@ -32,7 +32,8 @@ Durant l’étape d’assignation, chaque donnée est placée dans le cluster do
 1. On définit des centres initiaux pour tous les clusters.
 2. On assigne toutes les données à un cluster.
 3. On réévalue les centres des clusters.
-4. Retour en 2. si des valeurs ont changé de groupes.
+4. Retour en 2. si des valeurs ont changé de groupe.
 
 ### Version finale de l’algorithme
-
+Dans notre cas, il n’était pas possible d’implémenter notre algorithme
+[TODO: finir d’écrire cette partie]

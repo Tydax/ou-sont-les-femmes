@@ -14,3 +14,4 @@ De prime abord, concernant la problèmatique d’identification du genre d’un 
 Ainsi, parmi ces outils, j’ai développé un algorithme permettant de classifier les noms par similarité orthographique, un simple comparateur pour déduire le genre selon une base, et un second algorithme de groupement pour les noms de revues. N’ayant pas de restrictions au niveau langage si ce n’est d’avoir une application facile à déployer chez l’utilisateur, j’ai opté pour le langage fonctionnel Haskell qui me semblait adapté de part sa vitesse de traitement, et auquel l’utilisateur principal avait déjà fait face auparavant.
 
 L’intérêt d’un telle classifieur est déjà de pouvoir présenter les données autrement que par simple ordre alphabétique.
+[TODO: finir d’écrire ce paragraphe]
