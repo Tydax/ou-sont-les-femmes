@@ -1,4 +1,5 @@
 # Conclusion
+Ce projet fut l’occasion très intéressante d’accompagner une étude de sociologie. J’y ai découvert des méthodes pour aborder des sujets autres que l’informatique pur, et il s’agissait d’une expérience enrichissante à ce niveau. J’ai pu y apprendre qu’il est préférable de découper le problème en plus petits problèmes afin de les traiter séparément et alléger la charge de travail tout en permettant d’éclaircir sa vision globale. 
 
 # Remerciements
 Je souhaite remercier mon tuteur de projet Samuel HYM pour l’accompagnement au cours du projet, avec qui il fut très agréable de travailler, et qui m’a beaucoup aiguillé. Merci également à Étienne OLLION d’avoir fourni un sujet aussi original et intéressant que *Où sont les femmes ?*. Enfin, merci à l’Université de Lille 1 et aux responsables du Master Informatique d’offrir la possibilité à nous, étudiants, d’enrichir nos connaissances par le biais de projets universitaires. Merci à Alexandre MOEVI pour son soutien. Enfin, merci à vous, qui lisez ce rapport !

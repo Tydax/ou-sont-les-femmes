@@ -59,6 +59,11 @@ toClusterRecordsAll = concat . map toClusterRecords
 convertClustersToCSVString :: [Cluster] -> LazyBS.ByteString
 convertClustersToCSVString = encodeDefaultOrderedByName . toClusterRecordsAll
 
+-- |Implementation of 'Data.Csv.ToField' for a 'Types.Gender'.
+instance ToField Gender where
+  toField Female = toField "Female"
+  toField Other  = toField "Other"
+
 -- |Implementation of 'Data.Csv.FromRecord' for a 'Types.GenderedName'.
 instance FromRecord GenderedName where
   parseRecord r
@@ -73,10 +78,10 @@ instance FromRecord GenderedName where
     | otherwise = mzero
 
 -- |Implementation of 'Data.Csv.ToNamedRecord' for a 'Types.GenderedName'.
--- instance ToNamedRecord GenderedName where
---   toNamedRecord (GenderedName (n, g)) =
---     let h1:h2:_ = genderedNameHeader
---     in namedRecord [h1 .= n, h2 .= g]
+instance ToNamedRecord GenderedName where
+  toNamedRecord (GenderedName (n, g)) =
+    let h1:h2:_ = genderedNameHeader
+    in namedRecord [h1 .= n, h2 .= g]
 
 -- |Implementation of 'Data.Csv.DefaultOrdered' for a 'Types.GenderedName'.
 instance DefaultOrdered GenderedName where
@@ -92,3 +97,7 @@ genderedNameHeader = [toField "Name", toField "Gender"]
 writeCSVFile :: (DefaultOrdered a, ToNamedRecord a) => FilePath -> [a] -> IO ()
 writeCSVFile n =
   LazyBS.writeFile ("out/" ++ n ++ ".csv") . encodeDefaultOrderedByName
+
+-- |Loads the specified .CSV file.
+-- loadCSVFile :: (DefaultOrdered a, FromNamedRecord a) => FilePath -> Either
+-- loadCSVFile n = decode NoHeader bytestream

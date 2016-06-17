@@ -9,6 +9,7 @@ import System.IO
 import CSVPlayer
 import Types
 import NameCluster
+import NameGender
 import Utils
 
 -- |Clusterifies the specifed names and converts it into a String.
@@ -24,13 +25,13 @@ stringifyCSV ns = (show . convertClustersToCSVString . clusterify) ns
 
 -- TEST
 hardcodedValues :: [String]
-hardcodedValues = words "Armand Arnaud Theo Alex Adrien Tristan Alexandra \
-\ Julien Juliette Ilhem Alyx Tristan Alexis Alexandre Theo Thibault Thomas \
+hardcodedValues = words "Armand  Theo Alex Adrien Tristan Alexandra \
+\ Arnaud Julien Juliette Ilhem Alyx Tristan Alexis Alexandre Theo Thibault Thomas \
 \ Armande Armando Alexia"
 
 -- TEST
 displayHardCodedValues :: IO ()
-displayHardCodedValues = (putStrLn . show . stringifyCSV) hardcodedValues
+displayHardCodedValues = (putStrLn . show . stringifyClusters) hardcodedValues
 
 -- |Uses input as a list of names for clusterification.
 displayInputValues :: IO ()
@@ -67,4 +68,9 @@ generateFilenameFromTime =
     return filename
 
 main :: IO ()
-main = displayInputValues
+-- main = displayHardCodedValues
+main =
+  let
+    base = [GenderedName ("Diamant", Female), GenderedName ("Jackie", Other)]
+    ns = ["Alexandre", "Diamant", "ChouDeBruxelles41", "Jackie"]
+  in (putStrLn . show) (findGenderBase base ns)

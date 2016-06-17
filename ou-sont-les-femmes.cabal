@@ -19,6 +19,7 @@ library
                      , Utils
                      , CSVPlayer
                      , NameCluster
+                     , NameGender
   build-depends:       base >= 4.7 && < 5
                      , bytestring
                      , cassava

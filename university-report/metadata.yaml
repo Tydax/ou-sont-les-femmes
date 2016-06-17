@@ -1,13 +1,16 @@
 ---
-title: Où sont les femmes ?
-subtitle: Projet individuel
-author: 
+title: 'Projet individuel no. 74 : Où sont les femmes ?'
+author:
   - name: Armand BOUR
-    affiliation: Étudiant à l'Université de Lille 1
+    affiliation: Étudiant
+  - name: Samuel HYM
+    affiliation: Tuteur de projet
+  - name: Étienne OLLION
+    affiliation: Sociologue
 date: Dimanche 6 mars 2016
 lang: fr-FR
 tags: [haskell, projet, master, informatique, lille, féminisme]
 abstract: Analyse du problème et description de la solution proposée
-defaultfont: cmss
+# defaultfont: cmss
 toc: true
 ---
