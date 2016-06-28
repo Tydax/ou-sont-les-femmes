@@ -23,6 +23,8 @@ module CSVPlayer (
 import Control.Monad
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as LazyBS
+-- import Data.Vector
+
 import Data.Csv
 
 import Types
@@ -98,6 +100,13 @@ writeCSVFile :: (DefaultOrdered a, ToNamedRecord a) => FilePath -> [a] -> IO ()
 writeCSVFile n =
   LazyBS.writeFile ("out/" ++ n ++ ".csv") . encodeDefaultOrderedByName
 
--- |Loads the specified .CSV file.
--- loadCSVFile :: (DefaultOrdered a, FromNamedRecord a) => FilePath -> Either
--- loadCSVFile n = decode NoHeader bytestream
+-- |Loads the CSV gendered name base using the specified file path.
+loadGenderedBase :: FilePath -> IO (Maybe [GenderedName])
+loadGenderedBase fp =
+  do
+    file <- LazyBS.readFile fp
+    let list = decode file :: Either String [GenderedName]
+    res <- case list of
+      Left _  -> Nothing
+      Right _ -> Just list
+    return res

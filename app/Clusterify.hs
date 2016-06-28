@@ -1,5 +1,6 @@
 module Main where
 
+import qualified Data.ByteString.Lazy as LazyBS
 import Data.Time.Clock
 import Data.Time.Format
 import Data.Time.LocalTime
@@ -71,6 +72,6 @@ main :: IO ()
 -- main = displayHardCodedValues
 main =
   let
-    base = [GenderedName ("Diamant", Female), GenderedName ("Jackie", Other)]
+    base = loadGenderedBase "data/db_all_names.csv"
     ns = ["Alexandre", "Diamant", "ChouDeBruxelles41", "Jackie"]
   in (putStrLn . show) (findGenderBase base ns)
