@@ -15,6 +15,7 @@ module CSVPlayer (
   clusterHeader,
   convertClustersToCSVString,
   genderedNameHeader,
+  loadGenderedBase,
   toClusterRecords,
   toClusterRecordsAll,
   writeCSVFile
@@ -23,7 +24,7 @@ module CSVPlayer (
 import Control.Monad
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Lazy as LazyBS
--- import Data.Vector
+import qualified Data.Vector as Vect
 
 import Data.Csv
 
@@ -105,8 +106,7 @@ loadGenderedBase :: FilePath -> IO (Maybe [GenderedName])
 loadGenderedBase fp =
   do
     file <- LazyBS.readFile fp
-    let list = decode file :: Either String [GenderedName]
-    res <- case list of
-      Left _  -> Nothing
-      Right _ -> Just list
+    let list = decode NoHeader file :: Either String (Vect.Vector GenderedName)
+    let res = case list of Left _  -> Nothing
+                           Right x -> Just (Vect.toList x)
     return res

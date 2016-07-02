@@ -71,7 +71,11 @@ generateFilenameFromTime =
 main :: IO ()
 -- main = displayHardCodedValues
 main =
-  let
-    base = loadGenderedBase "data/db_all_names.csv"
-    ns = ["Alexandre", "Diamant", "ChouDeBruxelles41", "Jackie"]
-  in (putStrLn . show) (findGenderBase base ns)
+  do
+    let basePath = "data/db_all_names.csv"
+    let errorMsg = "Could not load gendered name base at path " ++ show basePath
+    let ns = ["Alexandre", "Diamant", "ChouDeBruxelles41", "Jackie"]
+    mbBase <- loadGenderedBase basePath
+    case mbBase of
+      Nothing   -> putStrLn errorMsg
+      Just base -> (putStrLn . show) (findGenderBase base ns)
