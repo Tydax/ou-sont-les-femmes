@@ -14,11 +14,13 @@ module NameGender (
   findGenderBase
 ) where
 
+import Data.Char
+
 import Types
 
 {-|
   Finds a gender for the specified list of names using the specified base.
-  The result can be a 'Tyoes.GenderedName' if the name was found in the
+  The result can be a 'Types.GenderedName' if the name was found in the
   specified base, or just the name else.
 -}
 findGenderBase :: [GenderedName] -> [Name] -> [Either GenderedName Name]
@@ -27,7 +29,8 @@ findGenderBase base ns =
     untainedBase = [x | GenderedName x <- base]
     look name =
       let
-        res = lookup name untainedBase
+        lowerName = map toLower name
+        res = lookup lowerName untainedBase
       in
         case res of
           Just gender-> Left (GenderedName (name, gender))

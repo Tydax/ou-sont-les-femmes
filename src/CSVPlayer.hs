@@ -102,11 +102,14 @@ writeCSVFile n =
   LazyBS.writeFile ("out/" ++ n ++ ".csv") . encodeDefaultOrderedByName
 
 -- |Loads the CSV gendered name base using the specified file path.
-loadGenderedBase :: FilePath -> IO (Maybe [GenderedName])
-loadGenderedBase fp =
+loadGenderedBase :: FilePath -> Bool -> IO (Maybe [GenderedName])
+loadGenderedBase fp hasHeader =
   do
     file <- LazyBS.readFile fp
-    let list = decode NoHeader file :: Either String (Vect.Vector GenderedName)
+    let header =  if hasHeader
+                  then HasHeader
+                  else NoHeader
+    let list = decode header file :: Either String (Vect.Vector GenderedName)
     let res = case list of Left _  -> Nothing
                            Right x -> Just (Vect.toList x)
     return res

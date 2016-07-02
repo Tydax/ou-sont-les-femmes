@@ -75,7 +75,7 @@ main =
     let basePath = "data/db_all_names.csv"
     let errorMsg = "Could not load gendered name base at path " ++ show basePath
     let ns = ["Alexandre", "Diamant", "ChouDeBruxelles41", "Jackie"]
-    mbBase <- loadGenderedBase basePath
+    mbBase <- loadGenderedBase basePath True
     case mbBase of
       Nothing   -> putStrLn errorMsg
       Just base -> (putStrLn . show) (findGenderBase base ns)
