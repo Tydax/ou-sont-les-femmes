@@ -20,12 +20,14 @@ library
                      , CSVPlayer
                      , NameCluster
                      , NameGender
+                     , OptApplicative
   build-depends:       base >= 4.7 && < 5
                      , bytestring
                      , cassava
                      , containers
                      , edit-distance
                      , vector
+                     , optparse-applicative
   default-language:    Haskell2010
 
 executable clusterify-exe
