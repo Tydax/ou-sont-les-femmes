@@ -21,6 +21,8 @@ module OptApplicative (
 
 import Options.Applicative
 
+import Types
+
 -- |Global options used in the executable.
 data GlobalOptions = GlobalOptions
   { optInput :: String -- Reads a file as a input
@@ -45,7 +47,7 @@ data VLFOptions = VLFOptions
 
 -- |Options associated with the 'GroupeLesNoms' command.
 data GLNOptions = GLNOptions
-  { optDist :: Int
+  { optDist :: String
   }
 
 -- |Parser for the 'VLFOptions'.
@@ -53,17 +55,18 @@ vlfOptions :: Parser VLFOptions
 vlfOptions = VLFOptions
   <$> strOption
       ( long "base"
-     <> short "b"
+     <> short 'b'
      <> metavar "BASEFILE"
      <> help "Uses BASEFILE as a base of gendered names" )
 
+-- |Parser for 'GLNOptions'.
 glnOptions :: Parser GLNOptions
 glnOptions = GLNOptions
-  <$> intOption -- TODO check this
+  <$> strOption
       ( long "distance"
-     <> short "d"
+     <> short 'd'
      <> metavar "DIST"
-     <> help "Uses DIST as valeur discriminatoire for the clusters of names" ) -- TODO
+     <> help "Uses DIST as valeur discriminatoire for the clusters of names" )
 
 
 -- |Parser for the 'GlobalOptions' of the program.
@@ -76,14 +79,14 @@ globalOptions = GlobalOptions
      <> help "Reads IFILE as an input" )
   <*> strOption
       ( long "output"
-     <> short "o"
+     <> short 'o'
      <> metavar "OFILE"
      <> help "Writes output to OFILE" )
   <*> subparser
       ( command "voici-les-femmes" (info vlfOptions
         ( progDesc "Assigns a gender to each NAME" ))
      <> command "groupe-les-noms" (info glnOptions
-        ( progDesc "Creates clusters of NAMES based on /ressemblance/ " )) -- TODO
+        ( progDesc "Creates clusters of NAMES based on likeness" )) -- TODO
       )
   <*> flag Normal Csv
       ( long "csv"

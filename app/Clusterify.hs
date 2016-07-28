@@ -11,6 +11,7 @@ import CSVPlayer
 import Types
 import NameCluster
 import NameGender
+import OptApplicative
 import Utils
 
 -- |Clusterifies the specifed names and converts it into a String.
@@ -68,9 +69,8 @@ generateFilenameFromTime =
     let filename = formatTime defaultTimeLocale "%Y-%m-%d_%H-%M-%S" localTime
     return filename
 
-main :: IO ()
--- main = displayHardCodedValues
-main =
+findGender :: IO ()
+findGender =
   do
     let basePath = "data/db_all_names.csv"
     let errorMsg = "Could not load gendered name base at path " ++ show basePath
@@ -79,3 +79,15 @@ main =
     case mbBase of
       Nothing   -> putStrLn errorMsg
       Just base -> (putStrLn . show) (findGenderBase base ns)
+
+-- TEST
+test :: Options -> IO ()
+test = putStrLn . show
+
+main :: IO ()
+main = execParser opts >>= test
+  where
+    opts = info (helper <*> sample)
+      ( fullDesc
+     <> progDesc "Multiple tools for name classification purposes"
+     <> header "ou-sont-les-femmes-? - name classification tools")
