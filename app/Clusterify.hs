@@ -80,14 +80,5 @@ findGender =
       Nothing   -> putStrLn errorMsg
       Just base -> (putStrLn . show) (findGenderBase base ns)
 
--- TEST
-test :: Options -> IO ()
-test = putStrLn . show
-
 main :: IO ()
-main = execParser opts >>= test
-  where
-    opts = info (helper <*> sample)
-      ( fullDesc
-     <> progDesc "Multiple tools for name classification purposes"
-     <> header "ou-sont-les-femmes-? - name classification tools")
+main = optMain
