@@ -27,8 +27,8 @@ import Types
 
 -- |Global options used in the executable.
 data GlobalOptions = GlobalOptions
-  { optInput :: String -- Reads a file as a input
-  , optOutput :: String -- Writes output to a file
+  { optInput :: Maybe String -- Reads a file as a input
+  , optOutput :: Maybe String -- Writes output to a file
   , optCsvFlag :: Format -- Defines output format
   , optCommand :: Command -- Command to execute
   , arguments :: [Name] -- List of 'Types.Name's to use
@@ -45,45 +45,45 @@ data Command
 
 -- |Options associated with the 'VoiciLesFemmes' command.
 data VLFOptions = VLFOptions
-  { optBase :: String
+  { optBase :: Maybe String
   } deriving (Show)
 
 -- |Options associated with the 'GroupeLesNoms' command.
 data GLNOptions = GLNOptions
-  { optDist :: Int
+  { optDist :: Maybe Int
   } deriving (Show)
 
 -- |Parser for the 'VLFOptions' command.
 vlfOptions :: Parser VLFOptions
 vlfOptions = VLFOptions
-  <$> optional $ strOption
+  <$> optional (strOption
       ( long "base"
      <> short 'b'
      <> metavar "BASEFILE"
-     <> help "Uses BASEFILE as a base of gendered names" )
+     <> help "Uses BASEFILE as a base of gendered names" ) )
 
 -- |Parser for 'GLNOptions' command.
 glnOptions :: Parser GLNOptions
 glnOptions = GLNOptions
-  <$> optional $ option auto
+  <$> optional (option auto
       ( long "distance"
      <> short 'd'
      <> metavar "DIST"
-     <> help "Uses DIST as valeur discriminatoire for the clusters of names" )
+     <> help "Uses DIST as valeur discriminatoire for the clusters of names" ) )
 
 -- |Parser for the 'GlobalOptions' of the program.
 globalOptions :: Parser GlobalOptions
 globalOptions = GlobalOptions
-  <$> optional $ strOption
+  <$> optional (strOption
       ( long "input"
      <> short 'i'
      <> metavar "IFILE"
-     <> help "Reads IFILE as an input" )
-  <*> optional $ strOption
+     <> help "Reads IFILE as an input" ) )
+  <*> optional (strOption
       ( long "output"
      <> short 'o'
      <> metavar "OFILE"
-     <> help "Writes output to OFILE" )
+     <> help "Writes output to OFILE" ) )
   <*> flag Normal Csv
       ( long "csv"
      <> help "Allows CSV export" )
