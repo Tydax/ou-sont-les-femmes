@@ -16,9 +16,7 @@ module OptApplicative (
   GlobalOptions(GlobalOptions),
   globalOptions,
   glnOptions,
-  optMain,
-  vlfOptions,
-  test
+  vlfOptions
 ) where
 
 import Options.Applicative
@@ -69,7 +67,7 @@ glnOptions = GLNOptions
       ( long "distance"
      <> short 'd'
      <> metavar "DIST"
-     <> help "Uses DIST as valeur discriminatoire for the clusters of names" ) )
+     <> help "Uses DIST as threshold for the clusters of names" ) )
 
 -- |Parser for the 'GlobalOptions' of the program.
 globalOptions :: Parser GlobalOptions
@@ -98,16 +96,3 @@ globalOptions = GlobalOptions
   <*> many
       ( argument str
         ( metavar "NAMES..." ) )
-
--- TEST
-test :: GlobalOptions -> IO ()
-test = putStrLn . show
-
--- |Parses all the options and call the entry function.
-optMain :: IO ()
-optMain = execParser opts >>= test
-  where
-    opts = info (helper <*> globalOptions)
-      ( fullDesc
-     <> progDesc "Multiple tools for name classification purposes"
-     <> header "ou-sont-les-femmes-? - name classification tools")

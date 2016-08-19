@@ -32,7 +32,7 @@ library
 
 executable clusterify-exe
   hs-source-dirs:      app
-  main-is:             Clusterify.hs
+  main-is:             OuSontLesFemmes.hs
   ghc-options:         -threaded -rtsopts -with-rtsopts=-N
   build-depends:       base
                      , bytestring

@@ -80,5 +80,37 @@ findGender =
       Nothing   -> putStrLn errorMsg
       Just base -> (putStrLn . show) (findGenderBase base ns)
 
+
+callVlfFunc :: VLFOptions -> IO ()
+callVlfFunc vlfOpts =
+
+{-|
+  Distributes calls so that the right function is called based on the typed
+  command.
+-}
+callMainFuncs :: GlobalOptions -> IO ()
+callMainFuncs opts =
+  let
+    cmd = optCommand opts
+    format = optCsvFlag opts
+    results =
+      case cmd of
+        VoiciLesFemmes vlfOpts -> callVlfFunc vlfOpts
+        GroupeLesNoms glnOpts -> callGlnFunc glnOpts
+    strResults =
+      case format of
+        Csv -> expression
+        Normal -> expression
+  in expression
+
+-- |Parses all the options and call the entry function.
+optMain :: IO ()
+optMain = execParser opts >>= callMainFuncs
+  where
+    opts = info (helper <*> globalOptions)
+      ( fullDesc
+     <> progDesc "Multiple tools for name classification purposes"
+     <> header "ou-sont-les-femmes-? - name classification tools")
+
 main :: IO ()
 main = optMain
